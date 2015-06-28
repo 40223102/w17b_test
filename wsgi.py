@@ -152,7 +152,12 @@ class Midterm(object):
     @cherrypy.expose
     def index(self):
         outstring = '''
-    a_40223102
+    <h1>CDA Final 考試二</h1>
+
+    <h2>第一題</h2>
+
+    <a href="drawspur">gear_02</a><br />
+
     '''
         return outstring
     @cherrypy.expose
@@ -228,7 +233,7 @@ class Midterm(object):
         return outstring
     @cherrypy.expose
     # N 為齒數, M 為模數, P 為壓力角
-    def drawspur(self, N=15, N1=24,M=5, P=20):
+    def drawspur(self, N=15, N1=24,M=10, P=20):
         outstring = '''
     <!DOCTYPE html> 
     <html>
@@ -245,11 +250,14 @@ class Midterm(object):
             outstring+=''' <option value="'''+str(j)+'''">'''+str(j)+'''</option>'''
         outstring+='''
        </select><br/>
-
+       
     第2齒數:<br />
         <select name="N1">
         '''
-        for j in range(24,81):
+        j=24
+        outstring +=''' <option value = '''+str(j)+'''>'''+str(j)+'''</option>'''
+        
+        for j in range(15,81):
             outstring+=''' <option value="'''+str(j)+'''">'''+str(j)+'''</option>'''
         outstring+='''
        </select><br/>
@@ -258,7 +266,7 @@ class Midterm(object):
     壓力角:<input type=text name=P value = '''+str(P)+'''><br />
     <input type=submit value=畫出正齒輪輪廓>
     </form>
-    <br /><a href="index">index</a><br />
+    <br />
     <!-- 載入 brython.js -->
     <script type="text/javascript" src="/static/Brython3.1.1-20150328-091302/brython.js"></script>
     <script>
@@ -274,7 +282,7 @@ class Midterm(object):
 
     @cherrypy.expose
     # N 為齒數, M 為模數, P 為壓力角
-    def drawspuraction(self, N=15, N1=24,M=5, P=20):
+    def drawspuraction(self, N=15, N1=24,M=10, P=20):
         outstring = '''
     <!DOCTYPE html> 
     <html>
@@ -295,6 +303,7 @@ class Midterm(object):
     模數:'''+str(M)+'''<output name=M for=str(M)><br />
     壓力角:'''+str(P)+'''<output name=P for=str(P)><br />
 
+    <a href="drawspur">回齒輪輸入</a><br />
 
     <!-- 以下為 canvas 畫圖程式 -->
     <script type="text/python">
@@ -338,6 +347,9 @@ class Midterm(object):
     # 將第1齒輪順時鐘轉 90 度
     # 使用 ctx.save() 與 ctx.restore() 以確保各齒輪以相對座標進行旋轉繪圖
 
+    ctx.font = "10px Verdana";
+    ctx.fillText("組員:02",x_g1, y_g1);
+
     ctx.save()
     # translate to the origin of second gear
     ctx.translate(x_g1, y_g1)
@@ -345,7 +357,7 @@ class Midterm(object):
     ctx.rotate(pi)
     # put it back
     ctx.translate(-x_g1, -y_g1)
-    spur.Spur(ctx).Gear(x_g1, y_g1, rp_g1, n_g1, pa, "blue")
+    spur.Spur(ctx).Gear(x_g1, y_g1, rp_g1, n_g1, pa, "red")
     ctx.restore()
 
     # 將第2齒輪逆時鐘轉 90 度之後, 再多轉一齒, 以便與第1齒輪進行囓合
@@ -357,7 +369,7 @@ class Midterm(object):
     ctx.rotate(pi/n_g2)
     # put it back
     ctx.translate(-x_g2, -y_g2)
-    spur.Spur(ctx).Gear(x_g2, y_g2, rp_g2, n_g2, pa, "black")
+    spur.Spur(ctx).Gear(x_g2, y_g2, rp_g2, n_g2, pa, "blue")
     ctx.restore()
 
 
@@ -624,4 +636,6 @@ if 'OPENSHIFT_REPO_DIR' in os.environ.keys():
     application = cherrypy.Application(root, config=application_conf)
 else:
     # 表示在近端執行
+    cherrypy.config.update({'server.socket_port': 8099})
     cherrypy.quickstart(root, config=application_conf)
+

@@ -169,7 +169,9 @@ if 'OPENSHIFT_REPO_DIR' in os.environ.keys():
     application = cherrypy.Application(root, config=application_conf)
 else:
     # 表示在近端執行
+    cherrypy.config.update({'server.socket_port': 8099})
     cherrypy.quickstart(root, config=application_conf)
+
 </t>
 <t tx="2014fall.20141212095015.1776">import cherrypy
 # 導入 Python 內建的 os 模組, 因為 os 模組為 Python 內建, 所以無需透過 setup.py 安裝
@@ -2499,7 +2501,12 @@ session.GetModelWindow (assembly).Repaint();
 <t tx="2015.20150609105412.1">@cherrypy.expose
 def index(self):
     outstring = '''
-a_40223102
+&lt;h1&gt;CDA Final 考試二&lt;/h1&gt;
+
+&lt;h2&gt;第一題&lt;/h2&gt;
+
+&lt;a href="drawspur"&gt;gear_02&lt;/a&gt;&lt;br /&gt;
+
 '''
     return outstring
 </t>
@@ -4137,7 +4144,7 @@ def spuraction(self, N=20 , M=5, P=15):
 </t>
 <t tx="amd.20150503185058.1">@cherrypy.expose
 # N 為齒數, M 為模數, P 為壓力角
-def drawspur(self, N=15, N1=24,M=5, P=20):
+def drawspur(self, N=15, N1=24,M=10, P=20):
     outstring = '''
 &lt;!DOCTYPE html&gt; 
 &lt;html&gt;
@@ -4154,11 +4161,14 @@ def drawspur(self, N=15, N1=24,M=5, P=20):
         outstring+=''' &lt;option value="'''+str(j)+'''"&gt;'''+str(j)+'''&lt;/option&gt;'''
     outstring+='''
    &lt;/select&gt;&lt;br/&gt;
-
+   
 第2齒數:&lt;br /&gt;
     &lt;select name="N1"&gt;
     '''
-    for j in range(24,81):
+    j=24
+    outstring +=''' &lt;option value = '''+str(j)+'''&gt;'''+str(j)+'''&lt;/option&gt;'''
+    
+    for j in range(15,81):
         outstring+=''' &lt;option value="'''+str(j)+'''"&gt;'''+str(j)+'''&lt;/option&gt;'''
     outstring+='''
    &lt;/select&gt;&lt;br/&gt;
@@ -4167,7 +4177,7 @@ def drawspur(self, N=15, N1=24,M=5, P=20):
 壓力角:&lt;input type=text name=P value = '''+str(P)+'''&gt;&lt;br /&gt;
 &lt;input type=submit value=畫出正齒輪輪廓&gt;
 &lt;/form&gt;
-&lt;br /&gt;&lt;a href="index"&gt;index&lt;/a&gt;&lt;br /&gt;
+&lt;br /&gt;
 &lt;!-- 載入 brython.js --&gt;
 &lt;script type="text/javascript" src="/static/Brython3.1.1-20150328-091302/brython.js"&gt;&lt;/script&gt;
 &lt;script&gt;
@@ -4184,7 +4194,7 @@ brython();
 </t>
 <t tx="amd.20150503185210.1">@cherrypy.expose
 # N 為齒數, M 為模數, P 為壓力角
-def drawspuraction(self, N=15, N1=24,M=5, P=20):
+def drawspuraction(self, N=15, N1=24,M=10, P=20):
     outstring = '''
 &lt;!DOCTYPE html&gt; 
 &lt;html&gt;
@@ -4205,6 +4215,7 @@ def drawspuraction(self, N=15, N1=24,M=5, P=20):
 模數:'''+str(M)+'''&lt;output name=M for=str(M)&gt;&lt;br /&gt;
 壓力角:'''+str(P)+'''&lt;output name=P for=str(P)&gt;&lt;br /&gt;
 
+&lt;a href="drawspur"&gt;回齒輪輸入&lt;/a&gt;&lt;br /&gt;
 
 &lt;!-- 以下為 canvas 畫圖程式 --&gt;
 &lt;script type="text/python"&gt;
@@ -4248,6 +4259,9 @@ y_g2 = y_g1+rp_g1 + rp_g2
 # 將第1齒輪順時鐘轉 90 度
 # 使用 ctx.save() 與 ctx.restore() 以確保各齒輪以相對座標進行旋轉繪圖
 
+ctx.font = "10px Verdana";
+ctx.fillText("組員:02",x_g1, y_g1);
+
 ctx.save()
 # translate to the origin of second gear
 ctx.translate(x_g1, y_g1)
@@ -4255,7 +4269,7 @@ ctx.translate(x_g1, y_g1)
 ctx.rotate(pi)
 # put it back
 ctx.translate(-x_g1, -y_g1)
-spur.Spur(ctx).Gear(x_g1, y_g1, rp_g1, n_g1, pa, "blue")
+spur.Spur(ctx).Gear(x_g1, y_g1, rp_g1, n_g1, pa, "red")
 ctx.restore()
 
 # 將第2齒輪逆時鐘轉 90 度之後, 再多轉一齒, 以便與第1齒輪進行囓合
@@ -4267,7 +4281,7 @@ ctx.translate(x_g2, y_g2)
 ctx.rotate(pi/n_g2)
 # put it back
 ctx.translate(-x_g2, -y_g2)
-spur.Spur(ctx).Gear(x_g2, y_g2, rp_g2, n_g2, pa, "black")
+spur.Spur(ctx).Gear(x_g2, y_g2, rp_g2, n_g2, pa, "blue")
 ctx.restore()
 
 
